@@ -1,15 +1,32 @@
 # eShop Shipping on .NET
 
-A public, fictional eShop shipping API sample for evaluating a .NET upgrade
-when required container-validation tooling is unavailable.
+A fictional shipping API targeting .NET Core 3.1. Submit a shipment and retrieve
+it by ID. Shipments are kept in memory and disappear when the process stops.
 
-## Scope
+**Unsupported legacy test baseline:** .NET Core 3.1 is out of support. This sample
+is not a production recommendation.
 
-The intended sample is limited to one API, tests, and a Dockerfile describing
-how to build its container image. Background services, databases, carrier
-integrations, identity migrations, and real account integrations are out of scope.
+## Guides
 
-Application implementation is not present. The starting .NET runtime version
-has not been selected, and no container-validation blocker has been reproduced.
+- [Run locally](docs/run-locally.md)
+- [Run with Docker](docs/run-with-docker.md)
+- [Behavior checks](docs/testing.md)
+
+## API
+
+| Request | Result |
+|---------|--------|
+| `POST /shipments` | JSON `recipient` (1-100 characters) and `destination` (1-200 characters) produce `201 Created`, a `Location` header, and the shipment with its ID and submission time. Blank or missing fields produce `400 Bad Request` with validation details. |
+| `GET /shipments/{id}` | Returns the shipment as JSON with `200 OK`, or `404 Not Found` for an unknown ID. |
+
+With the API running, submit and read a fictional shipment from another terminal:
+
+```powershell
+$shipment = Invoke-RestMethod http://localhost:5080/shipments -Method Post -ContentType application/json -Body '{"recipient":"Avery Example","destination":"12 Parcel Road, Sampletown"}'
+Invoke-RestMethod "http://localhost:5080/shipments/$($shipment.id)"
+```
+
+There is no database, authentication, background processing, or carrier integration.
+Use fictional data only.
 
 See [Glossary](GLOSSARY.md) for project terms.

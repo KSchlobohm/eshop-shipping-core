@@ -54,3 +54,12 @@ $missingId = [Guid]::NewGuid()
 $missing = Invoke-WebRequest -Uri "$base/shipments/$missingId" -SkipHttpErrorCheck -TimeoutSec 10
 Assert-True ($missing.StatusCode -eq 404) 'Unknown shipment must return 404.'
 Write-Output 'PASS: Report an unknown shipment (404).'
+
+$document = Invoke-WebRequest -Uri "$base/swagger/v1/swagger.json" `
+    -SkipHttpErrorCheck -TimeoutSec 10
+Assert-True ($document.StatusCode -eq 200) 'OpenAPI document must return 200.'
+$openApi = $document.Content | ConvertFrom-Json
+Assert-True ($openApi.openapi -like '3.*') 'Document must use OpenAPI 3.'
+Assert-True ($null -ne $openApi.paths.'/shipments'.post) 'Document must describe shipment submission.'
+Assert-True ($null -ne $openApi.paths.'/shipments/{id}'.get) 'Document must describe shipment retrieval.'
+Write-Output 'PASS: Generate the OpenAPI document (200 and shipment operations).'

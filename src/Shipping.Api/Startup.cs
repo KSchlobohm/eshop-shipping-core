@@ -7,12 +7,14 @@ namespace Shipping.Api
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
+            services.AddOpenApiDocument();
             services.AddSingleton<ShipmentStore>();
         }
 
         public void Configure(IApplicationBuilder app)
         {
+            app.UseOpenApi();
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }

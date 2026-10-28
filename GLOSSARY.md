@@ -9,3 +9,6 @@
 | Container validation | Checking that the application builds and runs in a container. |
 | Dockerfile | A file describing how to build the application's container image. |
 | Behavior checks | Automated HTTP requests checking the same shipment workflow against a native process or container. |
+| OpenAPI document | A machine-readable description of the API, available at `/swagger/v1/swagger.json`. |
+| NSwag | The library that generates the Shipping API's OpenAPI document. |
+| Newtonsoft.Json | The JSON serializer used by the Shipping API's MVC controllers. |
